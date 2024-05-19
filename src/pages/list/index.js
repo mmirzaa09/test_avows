@@ -1,26 +1,36 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native'
-import React, { useState, useEffect } from 'react'
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, RefreshControl } from 'react-native'
+import React, { useState, useEffect, useCallback } from 'react'
 import images from '../../resources/images';
 import { useDispatch, useSelector } from 'react-redux';
 import { getListContact } from '../../store/actions/actionContact';
 import axios from 'axios';
 
 const List = () => {
-    const [listData, setListData] = useState([]);
     const dispatch = useDispatch();
     const { listContact } = useSelector(state => state.contact)
+    const [refreshing, setRefreshing] = useState(false);
 
     useEffect(() => {
-        dispatch(getListContact())
-        setListData(listContact);
+        dispatch(getListContact());
     }, [dispatch]);
 
-    const renderComponent = () => {
-        if(!listData) {
-            return (<Text>test</Text>)
-        }
+    const onRefresh = useCallback(() => {
+        setRefreshing(true);
+        dispatch(getListContact())
+        .then(() => {
+            setRefreshing(false)
+        }).catch(() => {
+            setRefreshing(false)
+        });
+    });
 
-        return listData.map((data) => (
+    const renderComponent = () => {
+        if(!listContact) {
+            return (
+                <Text>test</Text>
+        )}
+
+        return listContact.map((data) => (
                 <View style={styles.contentContainer}>
                     <View style={styles.contentBody}>
                         <Image style={styles.imageStyle} source={{ uri: `${data.photo}` } || images.example}/>
@@ -38,9 +48,13 @@ const List = () => {
     }
 
     return (
-        <ScrollView>
+        <ScrollView
+            refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>
+            }
+        >
             <View style={styles.container}>
-                {listContact && renderComponent()}
+                {renderComponent()}
             </View>
         </ScrollView>
     )
@@ -91,9 +105,9 @@ const styles = StyleSheet.create({
         color: '#000'
     },
     iconEdit: {
-        width: 20,
-        height: 20,
-        marginRight: 20
+        width: 15,
+        height: 15,
+        margin: 10
     }
 });
 
