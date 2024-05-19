@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, RefreshCon
 import React, { useState, useEffect, useCallback } from 'react'
 import images from '../../resources/images';
 import { useDispatch, useSelector } from 'react-redux';
-import { getListContact } from '../../store/actions/actionContact';
+import { deleteContact, getListContact } from '../../store/actions/actionContact';
 import axios from 'axios';
 
 const List = () => {
@@ -24,11 +24,16 @@ const List = () => {
         });
     });
 
+    const onDeleteContact = (param) => {
+        dispatch(deleteContact(param))
+    }
+
     const renderComponent = () => {
         if(!listContact) {
             return (
                 <Text>test</Text>
-        )}
+            )
+        }
 
         return listContact.map((data) => (
                 <View style={styles.contentContainer}>
@@ -39,9 +44,14 @@ const List = () => {
                             <Text style={styles.umurStyle}>{data?.age}</Text>
                         </View>
                     </View>
-                    <TouchableOpacity>
-                        <Image style={styles.iconEdit} source={images.edit}/>
-                    </TouchableOpacity>
+                    <View style={styles.containerRight}>
+                        <TouchableOpacity>
+                            <Image style={styles.iconEdit} source={images.edit}/>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => {onDeleteContact(data?.id)}}>
+                            <Image style={styles.iconEdit} source={images.delete}/>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             )
         )
@@ -108,6 +118,9 @@ const styles = StyleSheet.create({
         width: 15,
         height: 15,
         margin: 10
+    },
+    containerRight: {
+        flexDirection: 'row'
     }
 });
 
