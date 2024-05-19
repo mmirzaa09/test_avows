@@ -1,4 +1,4 @@
-import { View, StyleSheet, SafeAreaView, Image, TouchableOpacity } from 'react-native'
+import { View, StyleSheet, SafeAreaView, Image, TouchableOpacity, Modal, Text, Pressable } from 'react-native'
 import React, { useState } from 'react'
 import TextInputComponent from '../../component/TextInputComponent';
 import Button from '../../component/Button';
@@ -22,7 +22,7 @@ const AddContact = () => {
             maxHeight: 2000,
             maxWidth: 2000,
         };
-    
+        setOnModal(false);
         launchImageLibrary(options, handleResponse);
     }
 
@@ -33,7 +33,7 @@ const AddContact = () => {
           maxHeight: 2000,
           maxWidth: 2000,
         };
-    
+        setOnModal(false);
         launchCamera(options, handleResponse);
     };
 
@@ -89,6 +89,25 @@ const AddContact = () => {
                     label='Simpan'
                 />
             </SafeAreaView>
+
+            <Modal
+                animationType='slide'
+                transparent={true}
+                visible={onModal}
+            >
+                <View style={Styles.centeredView}>
+                    <View style={Styles.modalView}>
+                        <Button
+                            label='File'
+                            onPress={() => openImagePicker()}
+                        />
+                        <Button
+                            label='Camera'
+                            onPress={() => handleCameraLaunch()}
+                        />
+                    </View>
+                </View>
+            </Modal>
         </View>
     )
 };
@@ -119,7 +138,29 @@ const Styles = StyleSheet.create({
         height: 70,
         tintColor: '#ffff',
         marginTop: 5
-    }
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 22,
+        backgroundColor: 'rgba(255, 255, 255, 0.8)'
+    },
+    modalView: {
+        backgroundColor: 'white',
+        width: 200,
+        borderRadius: 20,
+        padding: 35,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+      },
 });
 
 export default AddContact

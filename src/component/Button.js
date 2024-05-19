@@ -17,9 +17,8 @@ const Button = forwardRef(
 const Styles = StyleSheet.create({
     container: {
         padding: 10,
-        width: 'auto', 
+        width: '100%', 
         alignItems: 'center',
-        margin: 10, 
         borderRadius: 10, 
         backgroundColor: '#ccffe6',
         marginTop: 30
