@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { deleteContact, getListContact } from '../../store/actions/actionContact';
 import axios from 'axios';
 
-const List = () => {
+const List = ({navigation}) => {
     const dispatch = useDispatch();
     const { listContact, error } = useSelector(state => state.contact)
     const [refreshing, setRefreshing] = useState(false);
@@ -50,7 +50,7 @@ const List = () => {
                         </View>
                     </View>
                     <View style={styles.containerRight}>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={() => navigation.navigate('Edit')}>
                             <Image style={styles.iconEdit} source={images.edit}/>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => {onDeleteContact(data?.id)}}>
@@ -60,7 +60,7 @@ const List = () => {
                 </View>
             )
         )
-    }
+    };
 
     return (
         <ScrollView

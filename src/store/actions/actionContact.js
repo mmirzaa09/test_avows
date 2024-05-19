@@ -57,4 +57,23 @@ export const postDataContact = (param) => (dispatch) => new Promise(async(resolv
         });
         reject();
     });
-})
+});
+
+export const putDataContact = (id, param) => (dispatch) => new Promise(async(resolve, reject) => {
+    dispatch({ type: ContactTypes.ADD_CONTACT, message: '' });
+    await axios.put(API + `${id}`, param)
+    .then((res) => {
+        const response = res.data.data
+        dispatch({
+            type: ContactTypes.ADD_CONTACT,
+            payload: response
+        });
+        resolve();
+    }).catch(() => {
+        dispatch({
+            type: ContactTypes.ERROR_PUT,
+            error: true
+        });
+        reject();
+    });
+});

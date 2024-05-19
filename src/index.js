@@ -1,23 +1,14 @@
-import React from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import List from './pages/list';
-import AddContact from './pages/add';
+import { createStackNavigator } from '@react-navigation/stack';
+import EditContact from './pages/edit';
+import Index from './route/TabNavigator';
 
-const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
-const Index = () => {
+export default StackComponent = () =>  {
     return (
-        <Tab.Navigator>
-            <Tab.Screen 
-                name='List' 
-                component={List}
-            />
-            <Tab.Screen
-                name='Add'
-                component={AddContact}
-            />
-        </Tab.Navigator>
-    )
-}
-
-export default Index
+        <Stack.Navigator>
+            <Stack.Screen name="List" component={Index} options={{headerShown: false}}/>
+            <Stack.Screen name="Edit" component={EditContact} />
+        </Stack.Navigator>
+    );
+};
