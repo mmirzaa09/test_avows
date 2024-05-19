@@ -7,7 +7,7 @@ import axios from 'axios';
 
 const List = () => {
     const dispatch = useDispatch();
-    const { listContact } = useSelector(state => state.contact)
+    const { listContact, error } = useSelector(state => state.contact)
     const [refreshing, setRefreshing] = useState(false);
 
     useEffect(() => {
@@ -26,6 +26,11 @@ const List = () => {
 
     const onDeleteContact = (param) => {
         dispatch(deleteContact(param))
+        .then(() => {
+            dispatch(getListContact());
+        }).catch(() => {
+            dispatch(getListContact());
+        })
     }
 
     const renderComponent = () => {
@@ -38,7 +43,7 @@ const List = () => {
         return listContact.map((data) => (
                 <View style={styles.contentContainer}>
                     <View style={styles.contentBody}>
-                        <Image style={styles.imageStyle} source={{ uri: `${data.photo}` } || images.example}/>
+                        <Image style={styles.imageStyle} source={data.photo === 'N/A' ? images.example : { uri: `${data.photo}` }}/>
                         <View style={styles.containerName}>
                             <Text style={styles.nameStyle}>{data?.firsName} {data?.lastName}</Text>
                             <Text style={styles.umurStyle}>{data?.age}</Text>
@@ -95,7 +100,7 @@ const styles = StyleSheet.create({
     imageStyle: {
         width: 50,
         height: 50,
-        borderRadius: 10,
+        borderRadius: 50/2,
         overflow: "hidden",
         borderWidth: 3,
         marginRight: 10

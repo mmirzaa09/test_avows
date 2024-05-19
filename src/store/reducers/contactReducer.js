@@ -3,7 +3,7 @@ import { ContactTypes } from "../../resources/TypeReducer";
 const initialState = {
     listContact: [],
     message: '',
-    messageError: ''
+    error: false
 };
 
 const contactReducer = (state = initialState, action) => {
@@ -16,9 +16,9 @@ const contactReducer = (state = initialState, action) => {
             return {
                 message: action.payload
             }
-        case ContactTypes.ERROR_TYPE:
+        case ContactTypes.ERROR_DELETE:
             return {
-                messageError: action.payload
+                error: action.payload
             }
         default:
             return state;

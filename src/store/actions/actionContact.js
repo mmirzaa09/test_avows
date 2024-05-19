@@ -13,12 +13,15 @@ export const getListContact = () => (dispatch) => new Promise(async(resolve) => 
             payload: response
         });
         resolve(response);
-    }).catch((err) => {
-        console.log('error', err);
+    }).catch(() => {
+        dispatch({ 
+            type: ContactTypes.ERROR_TYPE, 
+            payload: true
+        });
     })
 });
 
-export const deleteContact = (id) => (dispatch) => new Promise(async() => {
+export const deleteContact = (id) => (dispatch) => new Promise(async(resolve, reject) => {
     dispatch({ type: ContactTypes.DELETE_CONTACT, message: '' });
     await axios.delete(API + `/${id}`)
     .then((res) => {
@@ -27,10 +30,12 @@ export const deleteContact = (id) => (dispatch) => new Promise(async() => {
             type: ContactTypes.DELETE_CONTACT, 
             payload: response 
         });
-    }).catch((err) => {
+        resolve(response)
+    }).catch(() => {
         dispatch({ 
-            type: ContactTypes.ERROR_TYPE, 
-            payload: err
+            type: ContactTypes.ERROR_DELETE, 
+            payload: true
         });
+        reject()
     })
 })
