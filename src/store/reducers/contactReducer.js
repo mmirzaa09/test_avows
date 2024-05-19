@@ -20,6 +20,10 @@ const contactReducer = (state = initialState, action) => {
             return {
                 error: action.payload
             }
+        case ContactTypes.ERROR_POST:
+            return {
+                error: action.payload
+            }
         default:
             return state;
     }

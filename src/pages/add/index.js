@@ -1,10 +1,12 @@
-import { View, StyleSheet, SafeAreaView, Image, TouchableOpacity, Modal, Text, Pressable } from 'react-native'
+import { View, StyleSheet, SafeAreaView, Image, TouchableOpacity, Modal, Text, Pressable, KeyboardAvoidingView, ScrollView } from 'react-native'
 import React, { useState } from 'react'
 import TextInputComponent from '../../component/TextInputComponent';
 import Button from '../../component/Button';
 import { launchImageLibrary as _launchImageLibrary, launchCamera as _launchCamera } from 'react-native-image-picker';
 import images from '../../resources/images';
 import ModalComponent from '../../component/ModalComponent';
+import { useDispatch } from 'react-redux';
+import { postDataContact } from '../../store/actions/actionContact';
 
 let launchImageLibrary = _launchImageLibrary;
 let launchCamera = _launchCamera;
@@ -12,8 +14,10 @@ let launchCamera = _launchCamera;
 const AddContact = () => {
     const [firstName, setFirstName] = useState();
     const [lastName, setLastName] = useState();
+    const [age, setAge] = useState()
     const [selectedImage, setSelectedImage] = useState(null);
     const [onModal, setOnModal] = useState(false);
+    const dispatch = useDispatch();
 
     const openImagePicker = () => {
         const options = {
@@ -38,7 +42,6 @@ const AddContact = () => {
     };
 
     const handleResponse = (response) => {
-        console.log(response)
         if (response.didCancel) {
             console.log('User cancelled image picker');
         } else if (response.error) {
@@ -50,65 +53,93 @@ const AddContact = () => {
         }
     };
 
-    return (
-        <View style={Styles.container}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                <TouchableOpacity onPress={() => setOnModal(!onModal)}>
-                    { selectedImage ?
-                        (<Image
-                            source={{ uri: selectedImage }}
-                            style={Styles.imageStyle}
-                            resizeMode="contain"
-                        />)
-                    : (
-                        <View style={Styles.imageEmpty}>
-                            <Image source={images.iconPlus} style={Styles.iconStyle}/>
-                        </View>
-                    )}
-                </TouchableOpacity>
-            </View>
-            <SafeAreaView>
-                <TextInputComponent
-                    label='Nama Depan'
-                    placeholder='Masukan Nama Depan'
-                    onChange={(param) => setFirstName(param)}
-                />
-                <TextInputComponent
-                    label='Nama Belakang'
-                    placeholder='Masukan Nama Belakang'
-                    onChange={(param) => setLastName(param)}
-                />
-                <View style={{ width: '40%' }}>
-                    <TextInputComponent
-                        label='Umur'
-                        placeholder='Masukan Umur'
-                        onChange={(param) => setLastName(param)}
-                    />
-                </View>
-                <Button
-                    label='Simpan'
-                />
-            </SafeAreaView>
+    const onSaveContact = () => {
+        const param = {
+            'firstName': firstName,
+            'lastName': lastName,
+            'age': age,
+            'photo': selectedImage
+        }
+        dispatch(postDataContact(param))
+        .then(() => {
+            resetState();
+        }).catch(() => {
+            resetState();
+        });
+    };
 
-            <Modal
-                animationType='slide'
-                transparent={true}
-                visible={onModal}
-            >
-                <View style={Styles.centeredView}>
-                    <View style={Styles.modalView}>
-                        <Button
-                            label='File'
-                            onPress={() => openImagePicker()}
-                        />
-                        <Button
-                            label='Camera'
-                            onPress={() => handleCameraLaunch()}
-                        />
+    const resetState = () => {
+        setFirstName('');
+        setLastName('');
+        setAge('');
+        setSelectedImage('');
+    }
+
+    return (
+        <KeyboardAvoidingView style={Styles.container}>
+            <ScrollView>
+                <View>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                        <TouchableOpacity onPress={() => setOnModal(!onModal)}>
+                            { selectedImage ?
+                                (<Image
+                                    source={{ uri: selectedImage }}
+                                    style={Styles.imageStyle}
+                                    resizeMode="contain"
+                                />)
+                            : (
+                                <View style={Styles.imageEmpty}>
+                                    <Image source={images.iconPlus} style={Styles.iconStyle}/>
+                                </View>
+                            )}
+                        </TouchableOpacity>
                     </View>
+                    <SafeAreaView>
+                        <TextInputComponent
+                            label='Nama Depan'
+                            placeholder='Masukan Nama Depan'
+                            onChange={(param) => setFirstName(param)}
+                        />
+                        <TextInputComponent
+                            label='Nama Belakang'
+                            placeholder='Masukan Nama Belakang'
+                            onChange={(param) => setLastName(param)}
+                        />
+                        <View style={{ width: '40%' }}>
+                            <TextInputComponent
+                                label='Umur'
+                                placeholder='Masukan Umur'
+                                onChange={(param) => setAge(param)}
+                                typeKeyboard='numeric'
+                            />
+                        </View>
+                        <Button
+                            label='Simpan'
+                            onPress={() => onSaveContact()}
+                        />
+                    </SafeAreaView>
+
+                    <Modal
+                        animationType='slide'
+                        transparent={true}
+                        visible={onModal}
+                    >
+                        <View style={Styles.centeredView}>
+                            <View style={Styles.modalView}>
+                                <Button
+                                    label='File'
+                                    onPress={() => openImagePicker()}
+                                />
+                                <Button
+                                    label='Camera'
+                                    onPress={() => handleCameraLaunch()}
+                                />
+                            </View>
+                        </View>
+                    </Modal>
                 </View>
-            </Modal>
-        </View>
+            </ScrollView>
+        </KeyboardAvoidingView>
     )
 };
 

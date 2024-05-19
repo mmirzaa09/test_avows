@@ -37,5 +37,24 @@ export const deleteContact = (id) => (dispatch) => new Promise(async(resolve, re
             payload: true
         });
         reject()
-    })
+    });
+});
+
+export const postDataContact = (param) => (dispatch) => new Promise(async(resolve, reject) => {
+    dispatch({ type: ContactTypes.ADD_CONTACT, message: ''});
+    await axios.post(API, param)
+    .then((res) => {
+        const response = res.data
+        dispatch({ 
+            type: ContactTypes.ADD_CONTACT, 
+            payload: response 
+        });
+        resolve();
+    }).catch((err) => {
+        dispatch({ 
+            type: ContactTypes.ERROR_POST, 
+            payload: true
+        });
+        reject();
+    });
 })
