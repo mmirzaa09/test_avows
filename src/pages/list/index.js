@@ -36,7 +36,9 @@ const List = ({navigation}) => {
     const renderComponent = () => {
         if(!listContact) {
             return (
-                <Text>test</Text>
+                <View>
+                    <Text>Data Not Found</Text>
+                </View>
             )
         }
 
@@ -50,7 +52,7 @@ const List = ({navigation}) => {
                         </View>
                     </View>
                     <View style={styles.containerRight}>
-                        <TouchableOpacity onPress={() => navigation.navigate('Edit')}>
+                        <TouchableOpacity onPress={() => navigation.navigate('Edit', { param: data})}>
                             <Image style={styles.iconEdit} source={images.edit}/>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => {onDeleteContact(data?.id)}}>

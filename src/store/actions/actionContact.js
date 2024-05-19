@@ -61,7 +61,7 @@ export const postDataContact = (param) => (dispatch) => new Promise(async(resolv
 
 export const putDataContact = (id, param) => (dispatch) => new Promise(async(resolve, reject) => {
     dispatch({ type: ContactTypes.ADD_CONTACT, message: '' });
-    await axios.put(API + `${id}`, param)
+    await axios.put(API + `/${id}`, param)
     .then((res) => {
         const response = res.data.data
         dispatch({
@@ -69,7 +69,7 @@ export const putDataContact = (id, param) => (dispatch) => new Promise(async(res
             payload: response
         });
         resolve();
-    }).catch(() => {
+    }).catch((err) => {
         dispatch({
             type: ContactTypes.ERROR_PUT,
             error: true

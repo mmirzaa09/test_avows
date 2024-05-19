@@ -6,7 +6,8 @@ const TextInputComponent = forwardRef(
         label,
         placeholder,
         onChange,
-        typeKeyboard
+        typeKeyboard,
+        value
     }) => {
         return (
             <View style={{ marginTop: 10, width: 'auto' }}>
@@ -16,6 +17,7 @@ const TextInputComponent = forwardRef(
                     placeholder={placeholder}
                     onChangeText={onChange}
                     keyboardType={typeKeyboard}
+                    value={value}
                 />
             </View>
         )
